@@ -109,9 +109,19 @@ int main()
 
 ////////////////////////////////////////////////////////////
 
-void removeUntil(Stack *s, int value)
-{
-/* add your code here */
+void removeUntil(Stack *s, int value) {
+    if (s == NULL || s->ll.size == 0) {
+        return;  // 스택이 비어있거나 NULL인 경우 처리
+    }
+
+    int topItem;
+    for (int i = 0; i < s->ll.size; i++) {
+        topItem = peek(s);
+        if (topItem == value) {
+            break;  // 주어진 값을 찾으면 반복 중단
+        }
+        pop(s);  // 주어진 값이 아니면 요소 제거
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////

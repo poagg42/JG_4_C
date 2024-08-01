@@ -39,6 +39,7 @@ int removeNode(LinkedList *ll, int index);
 int main()
 {
 	int c, i;
+	c = 1;
 	LinkedList ll;
 	LinkedList resultFrontList, resultBackList;
 
@@ -102,7 +103,36 @@ int main()
 
 void frontBackSplitLinkedList(LinkedList *ll, LinkedList *resultFrontList, LinkedList *resultBackList)
 {
-	/* add your code here */
+    int length = ll->size;
+    int frontLength = (length + 1) / 2;
+
+    ListNode *cur = ll->head;
+    ListNode *midNode = NULL;
+    int i;
+
+    // 중간까지 이동
+    for (i = 0; i < frontLength - 1; i++) {
+        cur = cur->next;
+    }
+
+    // midNode를 cur의 다음 노드로 설정한다.
+    midNode = cur->next;
+
+	// cur의 다음 노드를 NULL로 설정한다(끊는다.)
+    cur->next = NULL;
+
+	// frontList의 head를 LinkedList의 head로 설정한다.
+    resultFrontList->head = ll->head;
+	// frontList의 size를 frontLength로 설정한다.
+    resultFrontList->size = frontLength;
+
+	// backList의 head를 midNode로 설정한다.
+    resultBackList->head = midNode;
+	// backList의 size를 length - frontLength로 설정한다.
+    resultBackList->size = length - frontLength;
+
+    ll->head = NULL;
+    ll->size = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////

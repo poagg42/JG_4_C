@@ -87,7 +87,55 @@ int main()
 
 void RecursiveReverse(ListNode **ptrHead)
 {
-	/* add your code here */
+	// // 포인터 생성
+	// ListNode *cur = *ptrHead;
+	// ListNode *startNode = *ptrHead;
+	// ListNode *prevMax = NULL;
+	// ListNode *newNode = NULL;
+	// ListNode *initNode = NULL;
+
+	// // 예외 처리
+
+	// if(cur == NULL || cur->next == NULL){
+	// 	return;
+	// }
+	
+	// while (1) {
+	// 	prevMax = cur;
+	// 	cur = cur->next;
+
+	// if (cur->next == NULL) {
+	
+	// if (prevMax->next == NULL){
+	// 	break;
+	// }
+	// // 떨어뜨리기
+	// prevMax->next = NULL;
+
+	// // 새로운 리스트 만들기
+	// newNode = cur;
+
+	// cur = startNode;
+
+	// }
+	// }
+
+	ListNode *first;
+	ListNode *rest;
+
+	// Base case
+	if (*ptrHead == NULL || (*ptrHead)->next == NULL)
+		return;
+	
+	first = *ptrHead;
+	rest = first->next;
+
+	RecursiveReverse(&rest);
+
+	first->next->next = first;
+	first->next = NULL;
+
+	*ptrHead = rest;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

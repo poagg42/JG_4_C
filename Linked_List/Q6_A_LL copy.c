@@ -2,7 +2,7 @@
 
 /* CE1007/CZ1007 Data Structures
 Lab Test: Section A - Linked List Questions
-Purpose: Implementing the required functions for Question 1 */
+Purpose: Implementing the required functions for Question 6 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -11,25 +11,27 @@ Purpose: Implementing the required functions for Question 1 */
 
 //////////////////////////////////////////////////////////////////////////////////
 
-typedef struct _listnode{
+typedef struct _listnode
+{
 	int item;
 	struct _listnode *next;
 } ListNode;			// You should not change the definition of ListNode
 
-typedef struct _linkedlist{
+typedef struct _linkedlist
+{
 	int size;
 	ListNode *head;
 } LinkedList;			// You should not change the definition of LinkedList
 
 
-///////////////////////// function prototypes ////////////////////////////////////
+//////////////////////// function prototypes /////////////////////////////////////
 
-//You should not change the prototype of this function
-int insertSortedLL(LinkedList *ll, int item);
+// You should not change the prototype of this function
+int moveMaxToFront(ListNode **ptrHead);
 
 void printList(LinkedList *ll);
 void removeAllItems(LinkedList *ll);
-ListNode *findNode(LinkedList *ll, int index);
+ListNode * findNode(LinkedList *ll, int index);
 int insertNode(LinkedList *ll, int index, int value);
 int removeNode(LinkedList *ll, int index);
 
@@ -38,22 +40,22 @@ int removeNode(LinkedList *ll, int index);
 
 int main()
 {
-	LinkedList ll;
 	int c, i, j;
 	c = 1;
 
+	LinkedList ll;
 	//Initialize the linked list 1 as an empty linked list
 	ll.head = NULL;
 	ll.size = 0;
 
-	printf("1: Insert an integer to the sorted linked list:\n");
-	printf("2: Print the index of the most recent input value:\n");
-	printf("3: Print sorted linked list:\n");
-	printf("0: Quit:");
+
+	printf("1: Insert an integer to the linked list:\n");
+	printf("2: Move the largest stored value to the front of the list:\n");
+	printf("0: Quit:\n");
 
 	while (c != 0)
 	{
-		printf("\nPlease input your choice(1/2/3/0): ");
+		printf("Please input your choice(1/2/0): ");
 		scanf("%d", &c);
 
 		switch (c)
@@ -61,15 +63,13 @@ int main()
 		case 1:
 			printf("Input an integer that you want to add to the linked list: ");
 			scanf("%d", &i);
-			j = insertSortedLL(&ll, i);
+			j=insertNode(&ll, ll.size, i);
 			printf("The resulting linked list is: ");
 			printList(&ll);
 			break;
 		case 2:
-			printf("The value %d was added at index %d\n", i, j);
-			break;
-		case 3:
-			printf("The resulting sorted linked list is: ");
+			moveMaxToFront(&(ll.head));  // You need to code this function
+			printf("The resulting linked list after moving largest stored value to the front of the list is: ");
 			printList(&ll);
 			removeAllItems(&ll);
 			break;
@@ -80,72 +80,44 @@ int main()
 			printf("Choice unknown;\n");
 			break;
 		}
-
-
 	}
 	return 0;
 }
 
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
-int insertSortedLL(LinkedList *ll, int item)
+int moveMaxToFront(ListNode **ptrHead)
 {
-	// ListNode라는 형식으로 *newNode, *cur, *prev를 설정하라.
-	ListNode *newNode, *cur, *prev;
-
-	// newNode는 ListNode* 라는 데이터 형식을 가지고 ListNode의 사이즈만큼 동적 메모리 할당을 한 것을 담은 변수이다.
-	newNode = (ListNode*)malloc(sizeof(ListNode));
+	// 리스트가 비어있거나 노드가 하나뿐인 경우
+	if (*ptrHead == NULL || (*ptrHead)->next == NULL)
+		return 0;
 	
+	ListNode *cur = *ptrHead;
+	ListNode *maxNode = *ptrHead;
+	ListNode *prevMax = NULL;
+	ListNode *prev = NULL;
 
-	// 만약 newNode가 NULL이라면 -1을 return하라.
-	if (newNode == NULL) {
-		return -1;
+	// 최대값을 가진 노드 찾기
+	while (cur->next != NULL) {
+		if (cur->next->item > maxNode->item) {
+			prevMax = cur;
+			maxNode = cur->next;
+		}
+		cur = cur->next;
 	}
+
+	if (maxNode == *ptrHead)
+		return 0;
 	
+	prevMax->next = maxNode->next;
 
-	// newNode에 접근해 item 필드 초기화
+	maxNode->next = *ptrHead;
+	*ptrHead = maxNode;
 
-	newNode -> item = item;
-	
-	// newNode에 접근해 next 필드 초기화
-
-	newNode -> next = NULL;
-
-	// 만약 ll의 head가 NULL이면
-
-	if (ll -> head == NULL) {
-		
-		// ll의 head 멤버변수에 newNode를 저장한다.
-		ll -> head = newNode;
-
-	// 맨 앞에 삽입해야 하는 경우
-	// 리스트가 비어있거나 첫 번째 노드의 값이 삽입하려는 값보다 크거나 같은 경우
-	} else if (ll -> head -> item >= item) {
-		newNode -> next = ll -> head;
-		ll -> head = newNode;
-	}
-	
-
-	
-
-	// 맨 앞에 삽입해야 하는 경우
-	// 리스트가 비어있거나 첫 번째 노드의 값이 삽입하려는 값보다 크거나 같은 경우
-	
-	
-	// 리스트의 중간 또는 끝에 삽입해야 하는 경우
-	
-		// cur이 NULL이 아니고 아이템으로 보낸 게 item보다 작은 경우
-		// prev는 현재 노드의 이전 노드를 가리키고, cur는 현재 노드를 가리킵니다.
-
-		// newNode는 새로운 노드를 prev와 cur 사이에 삽입합니다.
-
-		
-
-	// 리스트의 중간 또는 끝에 삽입해야 하는 경우
-
+	return 1;
 }
 
-///////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////
 
 void printList(LinkedList *ll){
 
@@ -164,23 +136,7 @@ void printList(LinkedList *ll){
 	printf("\n");
 }
 
-
-void removeAllItems(LinkedList *ll)
-{
-	ListNode *cur = ll->head;
-	ListNode *tmp;
-
-	while (cur != NULL){
-		tmp = cur->next;
-		free(cur);
-		cur = tmp;
-	}
-	ll->head = NULL;
-	ll->size = 0;
-}
-
-
-ListNode *findNode(LinkedList *ll, int index){
+ListNode * findNode(LinkedList *ll, int index){
 
 	ListNode *temp;
 
@@ -268,4 +224,18 @@ int removeNode(LinkedList *ll, int index){
 	}
 
 	return -1;
+}
+
+void removeAllItems(LinkedList *ll)
+{
+	ListNode *cur = ll->head;
+	ListNode *tmp;
+
+	while (cur != NULL){
+		tmp = cur->next;
+		free(cur);
+		cur = tmp;
+	}
+	ll->head = NULL;
+	ll->size = 0;
 }

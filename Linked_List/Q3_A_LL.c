@@ -87,6 +87,49 @@ int main()
 void moveOddItemsToBack(LinkedList *ll)
 {
 	/* add your code here */
+
+	// 리스트가 비어있거나 노드가 1개 이하면 변경 불필요
+	if (ll == NULL || ll->head == NULL || ll->size <= 1)
+		return;
+
+	// 포인터 생성, cur을 링크드 리스트의 head로 설정
+	ListNode *evenHead = NULL, *evenTail = NULL;
+	ListNode *oddHead = NULL, *oddTail = NULL;
+	ListNode *cur = ll->head;
+
+	// 링크드리스트를 순회하면서 현재 노드의 값이 짝수인 경우 evenTail의 다음 노드로 연결, evenTail을 현재 노드로 업데이트
+	// 링크드리스트를 순회하면서 현재 노드의 값이 홀수인 경우 oddTail의 다음 노드로 연결, oddTail을 현재 노드로 업데이트
+
+	while (cur != NULL) {
+		ListNode *next = cur->next; // 다음 노드 저장
+		cur->next = NULL; // 현재 노드 분리
+
+		if (cur->item % 2 == 0) { // 짝수인 경우
+			if (evenHead == NULL) {
+				evenHead = evenTail = cur;
+			} else {
+				evenTail->next = cur;
+				evenTail = cur;
+			}
+		} else { // 홀수인 경우
+			if (oddHead == NULL) {
+				oddHead = oddTail = cur;
+			} else {
+				oddTail->next = cur;
+				oddTail = cur;
+			}
+		}
+
+		cur = next;
+
+	}
+
+	if (evenHead == NULL) {
+		ll->head = oddHead;
+	} else {
+		ll->head = evenHead;
+		evenTail->next = oddHead;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
