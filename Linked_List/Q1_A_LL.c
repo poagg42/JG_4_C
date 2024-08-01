@@ -94,6 +94,7 @@ int insertSortedLL(LinkedList *ll, int item)
 	// ListNode라는 형식으로 *newNode, *cur, *prev를 설정하라.
 	
 	ListNode *newNode, *cur, *prev; 
+	int index = 0;
 
 	// newNode는 ListNode* 라는 데이터 형식을 가지고 ListNode의 사이즈만큼 동적 메모리 할당을 한 것을 담은 변수이다.
 	newNode = (ListNode*)malloc(sizeof(ListNode));
@@ -115,12 +116,18 @@ int insertSortedLL(LinkedList *ll, int item)
 
 		// ll의 head 멤버변수에 newNode를 저장한다.
 		ll -> head = newNode;
+		ll -> size++;
+
+		// 신규 추가
+		return 0;
 
 	// 맨 앞에 삽입해야 하는 경우
 	// 리스트가 비어있거나 첫 번째 노드의 값이 삽입하려는 값보다 크거나 같은 경우
 	} else if (ll -> head -> item >= item) {
 		newNode -> next = ll -> head;
 		ll -> head = newNode;
+		ll -> size++;
+		return 0;
 	
 	// 리스트의 중간 또는 끝에 삽입해야 하는 경우
 	} else {
@@ -132,16 +139,16 @@ int insertSortedLL(LinkedList *ll, int item)
 		while (cur != NULL && cur -> item < item) {
 			prev = cur;
 			cur = cur -> next;
+			index++;
 		}
 
 		// newNode는 새로운 노드를 prev와 cur 사이에 삽입합니다.
 
 		newNode -> next = cur;
 		prev -> next = newNode;
+		ll -> size++;
+		return index;
 	}
-
-	ll -> size++;
-	return ll -> size - 1;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
